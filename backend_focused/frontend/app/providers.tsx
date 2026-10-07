@@ -4,6 +4,9 @@ import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { PropsWithChildren, useMemo, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import { AuthProvider } from '@/lib/auth-context';
+import { FeedbackProvider } from '@/lib/feedback';
+
 function useTheme() {
   return useMemo(
     () =>
@@ -24,14 +27,27 @@ function useTheme() {
 
 export default function Providers({ children }: PropsWithChildren) {
   const theme = useTheme();
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 1,
+            refetchOnWindowFocus: false,
+            staleTime: 30_000,
+          },
+        },
+      }),
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
+      <FeedbackProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
+      </FeedbackProvider>
     </QueryClientProvider>
   );
 }

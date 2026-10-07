@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+
+# Virtual environment
+.venv/
+venv/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.*
